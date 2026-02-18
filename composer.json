@@ -1,0 +1,33 @@
+{
+    "name": "fredbradley/cranleigh-snmp-check",
+    "description": "A PHP wrapper class for SNMP checks on APC UPS devices, originally written for use with Nagios/nagDash at Cranleigh School.",
+    "type": "library",
+    "keywords": ["snmp", "ups", "nagios", "apc", "cranleigh"],
+    "homepage": "https://github.com/fredbradley/CheckSNMPClass",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fred Bradley",
+            "email": "frb@cranleigh.org",
+            "homepage": "http://www.fredbradley.uk",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "FredBradley\\CranleighSNMP\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FredBradley\\CranleighSNMP\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpunit/phpunit": "^11"
+    }
+}
