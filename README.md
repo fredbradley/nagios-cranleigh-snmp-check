@@ -7,13 +7,11 @@ A PHP wrapper class for checking APC UPS devices via SNMP, designed for use with
 
 ## Requirements
 
-- PHP >= 5.6
+- PHP >= 8.4
 - The `check_snmp_apcups` Nagios plugin installed on your server (default path: `/usr/lib64/nagios/plugins/check_snmp_apcups`)
 - SNMP access to your UPS device
 
 ## Installation
-
-Install via Composer:
 
 ```bash
 composer require fredbradley/cranleigh-snmp-check
@@ -22,7 +20,7 @@ composer require fredbradley/cranleigh-snmp-check
 ## Usage
 
 ```php
-<?php
+<?php declare(strict_types=1);
 
 require 'vendor/autoload.php';
 
@@ -35,39 +33,32 @@ $ups = new CranleighSNMPCheck('192.168.1.100', 'public');
 echo $ups->displayBlock();
 ```
 
-The `displayBlock()` method returns an HTML `<div>` with CSS classes reflecting the current Nagios state:
+The `displayBlock()` method returns an HTML `<div>` with a CSS class reflecting the current Nagios state:
 
-| State    | CSS class |
-|----------|-----------|
-| OK       | `ok`      |
-| Warning  | `warning` |
-| Critical | `notok`   |
-| Unknown  | `unknown` |
-
-Warning is triggered when load exceeds 70% or runtime drops below 30 minutes. Critical is triggered when load exceeds 80% or runtime drops below 20 minutes.
+| State    | CSS class | Trigger                                      |
+|----------|-----------|----------------------------------------------|
+| OK       | `ok`      | Load ≤ 70% and runtime ≥ 30 min              |
+| Warning  | `warning` | Load > 70% **or** runtime < 30 min           |
+| Critical | `notok`   | Load > 80% **or** runtime < 20 min           |
+| Unknown  | `unknown` | State cannot be determined                   |
 
 ## Public Properties
 
 After instantiation, the following properties are available:
 
-| Property       | Type   | Description                              |
-|----------------|--------|------------------------------------------|
-| `load_percent` | int    | Current UPS load as a percentage         |
-| `runtime`      | string | Remaining battery runtime value          |
-| `css`          | object | CSS class names for each Nagios state    |
+| Property      | Type | Description                              |
+|---------------|------|------------------------------------------|
+| `loadPercent` | int  | Current UPS load as a percentage         |
+| `runtime`     | int  | Remaining battery runtime value          |
 
-## Configuration
+## Running Tests
 
-By default, the class calls the plugin at `/usr/lib64/nagios/plugins/check_snmp_apcups`. If your plugin lives elsewhere, you can change the `$check_command` property by extending the class:
-
-```php
-class MyUPSCheck extends \FredBradley\CranleighSNMP\CranleighSNMPCheck
-{
-    protected $check_command = '/usr/local/nagios/plugins/check_snmp_apcups';
-}
+```bash
+composer require --dev phpunit/phpunit
+./vendor/bin/phpunit
 ```
 
-> **Note:** You may need to change `$check_command` from `private` to `protected` in the source to allow this.
+The test suite uses a namespace-scoped stub for `shell_exec` so no real UPS or Nagios plugin is required.
 
 ## Author
 
